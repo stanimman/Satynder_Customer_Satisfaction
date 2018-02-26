@@ -1,0 +1,158 @@
+# Hello World program in Python
+    
+import numpy as np
+N, D1, D2, D3 = 20, 5, 6, 3
+eps =0.02
+X = np.random.randn(N, D1)
+D = X.shape[1]
+gamma=1
+beta=0
+
+#mu = 1./N * np.sum(X, axis = 0)
+#xmu = X - mu
+#sq = xmu ** 2
+#var = 1./N * np.sum(sq, axis = 0)
+#sqrtvar = np.sqrt(var + eps)
+#ivar = 1./sqrtvar
+#xhat = xmu * ivar
+#gammax = gamma * xhat
+#out = gammax + beta
+
+#print(out)
+
+
+sample_mean_mat = np.mean(X,axis=0)
+mean_mat_stretch = np.tile(sample_mean_mat,(X.shape[0],1)
+#sq = xmu ** 2
+#sample_variance_mat = 1./N * np.sum(sq, axis = 0)
+#sample_variance_mat = np.var(X,axis=0,dtype=np.float64)
+#sample_sd_mat = np.sqrt(sample_variance_mat + eps)
+#variance_mat_stretch = np.tile(variance_mat_stretch,(X.shape[0],1)
+#Batch_norm = ( X - mean_mat_stretch ) / variance_mat_stretch
+#gamma_stretch = np.tile(gamma,(X.shape[0],1)
+#beta_stretch = np.tile(beta,(X.shape[0],1)                        
+#out = gamma*batch_norm + beta_stretch  
+#print(out)
+
+
+
+
+sample_mean_mat = np.mean(X,axis=0)
+#mean_mat_stretch = np.tile(sample_mean_mat,(X.shape[0],1)
+#sq = xmu ** 2
+#sample_variance_mat = 1./N * np.sum(sq, axis = 0)
+sample_variance_mat = np.var(X,axis=0,dtype=np.float64)
+sample_sd_mat = np.sqrt(sample_variance_mat + eps)
+inv_varx = 1./sample_sd_mat # Seperating out as they are required in backprop
+#variance_mat_stretch = np.tile(variance_mat_stretch,(X.shape[0],1)
+Num = ( X - sample_mean_mat ) #Seperating out as they are required backprop
+batch_norm =  Num / sample_sd_mat
+#gamma_stretch = np.tile(gamma,(X.shape[0],1)
+#beta_stretch = np.tile(beta,(X.shape[0],1)                        
+out1 = gamma*batch_norm + beta  
+print(out1)
+
+
+sample_sd_mat = np.sqrt(sample_variance_mat + eps)
+dx1 = dout * gamma * inv_varx
+#dx2 = -1. * 1./N * dx1 
+dvar = -1. * dout * Num * inv_varx * inv_varx 
+dx2 = 1./N * 2 * Num * 0.5 * (1. / np.sqrt(sample_sd_mat)) * dvar
+#dx4 = -1. * 1./N * dx3
+dx = dx1 + dx2
+dx =  -1. * 1./N * dx
+print(dx) 
+
+
+#get the dimensions of the input/output
+N,D = dout.shape
+
+#step9
+dbeta = np.sum(dout, axis=0)
+dgammax = dout #not necessary, but more understandable
+
+#step8
+dgamma = np.sum(dgammax*xhat, axis=0)
+dxhat = dgammax * gamma
+
+#step7
+divar = np.sum(dxhat*xmu, axis=0)
+dxmu1 = dxhat * ivar
+
+#step6
+dsqrtvar = -1. /(sqrtvar**2) * divar
+
+#step5
+dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
+
+#step4
+dsq = 1. /N * np.ones((N,D)) * dvar
+
+#step3
+dxmu2 = 2 * xmu * dsq
+
+#step2
+dx1 = (dxmu1 + dxmu2)
+dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
+
+#step1
+dx2 = 1. /N * np.ones((N,D)) * dmu
+
+#step0
+dx = dx1 + dx2
+
+print dx
+
+python_Learning
+
+numpy.random.rand : Taking random sample from uniform distribution / rectangular distribution 
+
+http://mathworld.wolfram.com/UniformDistribution.html
+
+Create an array of the given shape and populate it with random samples from a uniform distribution over [0, 1).
+
+numpy.random.randn : Taking random sample from normal distribution
+
+Slicing / subsetting-a-2d-numpy-array
+
+Try executing the manual code , gives good idea on slicing on 2d array
+
+explains the np.meshgrid and np.ix_ effort lessly
+
+https://stackoverflow.com/questions/30917753/subsetting-a-2d-numpy-array
+
+What is differentiating
+1. A blog which gives explicit evidence (even if it repetition of what is available in Internet)
+2. A neatly build resume (First impression is going make all the different)
+	Exhibit the hands on experience - all are course oriented
+	Exhibit the Big Data Expertise - not many in the industry knows the stuff
+3. Exhibiting self confidence in Interview as though you have dealt with it well before (Not too excited but a matured behavior)
+   
+ x1 = np.pad(x,((0,0),(0,0),(pad,pad),(pad,pad)),'constant', constant_values=(0))
+
+import numpy as np
+x_shape = (2, 3, 4, 4)
+w_shape = (3, 3, 4, 4)
+x = np.linspace(-0.1, 0.5, num=np.prod(x_shape)).reshape(x_shape)
+w = np.linspace(-0.2, 0.3, num=np.prod(w_shape)).reshape(w_shape)
+b = np.linspace(-0.1, 0.2, num=3)
+
+#print(x)
+#print(x.shape)
+pad = 1
+x1 = np.pad(x,((0,0),(0,0),(pad,pad),(pad,pad)),'constant', constant_values=(0))
+#x1 = np.pad(x,((0,0),(0,0),(2,2),(2,2)),'constant', constant_values=(0))
+#print(x1.shape)
+#  print(x1)
+s = 2
+st = 0
+for i in range(N)
+
+slicedx1 = x1[i,:,st:F+1,st:F+1]
+
+st += s 
+#print(slicedx1)
+#print(slicedx1.shape)
+
+x2 = np.reshape(slicedx1,(-1))
+print(x2)
