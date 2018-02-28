@@ -3,6 +3,187 @@ https://colab.research.google.com/drive/1USjnH9kBSVC9TanyHTDAeJB0nBLti-Ek
 http://forums.fast.ai/t/colaboratory-and-fastai/10122/17
 
 
+
+# coding: utf-8
+
+# In[1]:
+
+
+import numpy as np
+import pandas as pd
+
+
+# In[2]:
+
+
+# Loading your data
+def load_data(path,format):
+    if (format == 'csv'):
+        df = pd.read_csv(path)
+    else: 
+        df = "Path / Data Error"
+    return df
+
+
+# In[3]:
+
+
+path = "C:/Users/584140/Documents/Santander/train.csv"
+
+
+# In[4]:
+
+
+df_train = load_data(path,'csv')
+
+
+# In[5]:
+
+
+# Basic Data Exploration
+def basic_exploration(df):
+    #print ("Shape of the Dataframe is  %f"(df.shape)) Not working need to explore
+    print(df.shape)
+    #print (df.dtypes)
+    print (df.info())
+
+
+# In[6]:
+
+
+basic_exploration(df_train)
+
+
+# In[7]:
+
+
+# Count NA / 
+def na_count(df):
+    countNA_Column = (df.isnull().sum()).sum()
+    String1 = "No. of NA columns = "
+    hw12 = '%s %d' % (String1, countNA_Column)
+    if (countNA_Column > 0):
+        print(df.isnull().sum()>0)
+    print(hw12)
+    
+    
+    
+    
+    
+
+
+# In[8]:
+
+
+type(df_train.isnull().sum())
+
+
+# In[9]:
+
+
+na_count(df_train)
+
+
+# In[10]:
+
+
+print ((df_train.isnull().sum()).sum())
+
+
+# In[11]:
+
+
+# View Data Type of each column and the names
+df_train.dtypes
+df_train.columns
+
+
+# In[12]:
+
+
+#List unique values in the df['name'] column
+df_train.TARGET.unique()
+
+
+# In[13]:
+
+
+#iloc refers to the index of the column , use loc['TARGET'] to subset based on the some condition
+# https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
+#X_train = df_train.drop('TARGET', axis=1)
+X_train = df_train.iloc[0:25000,0:(df_train.shape[1]-1)]
+y_train = df_train.iloc[0:25000,-1]
+print(X_train.shape)
+print(y_train.shape)
+
+
+# In[14]:
+
+
+from sklearn.metrics import confusion_matrix
+from sklearn.linear_model.logistic import LogisticRegression
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import roc_curve, auc
+
+classifier = LogisticRegression()
+classifier.fit(X_train, y_train)
+scores = cross_val_score(classifier, X_train, y_train, cv=5)
+print('Accuracies: %s' % scores)
+print('Mean accuracy: %s' % np.mean(scores))
+
+
+# In[15]:
+
+
+y_pred = classifier.predict(X_train)
+
+
+# In[18]:
+
+
+# Plot Confusion Matrix
+
+import matplotlib.pyplot as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+from sklearn.metrics import confusion_matrix
+confusion_matrix = confusion_matrix(y_train, y_pred)
+print(confusion_matrix)
+plt.matshow(confusion_matrix)
+plt.title('Confusion matrix')
+plt.colorbar()
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+plt.show()
+
+
+# In[19]:
+
+
+unique_elements, counts_elements = np.unique(y_pred, return_counts=True)
+print(np.asarray((unique_elements, counts_elements)))
+
+
+# In[20]:
+
+
+unique_elements, counts_elements = np.unique(y_train, return_counts=True)
+print(np.asarray((unique_elements, counts_elements)))
+
+
+# In[23]:
+
+
+precisions = cross_val_score(classifier, X_train, y_train, cv=5,
+  scoring='precision')
+#print('Precision: %s' % np.mean(precisions))
+print(precisions)
+recalls = cross_val_score(classifier, X_train, y_train, cv=5,
+  scoring='recall')
+print('Recall: %s' % np.mean(recalls))
+print(recalls)
+
+
+
 # Hello World program in Python
     
 import numpy as np
